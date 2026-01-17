@@ -1,0 +1,7 @@
+## Interface: 11200
+## Title: |cffDA70D6Fostercare|r |cffBF3EFFRezTimer|r
+## SavedVariables: TurtleRezDB
+## Notes: Tracks ress timers and the amount of dead enemies in BGs.
+## Author: Fostercare
+## Version: 1.0
+FostercareRezTimer.lua
