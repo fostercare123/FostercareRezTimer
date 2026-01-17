@@ -3,5 +3,6 @@
 ## SavedVariables: TurtleRezDB
 ## Notes: Tracks ress timers and the amount of dead enemies in BGs.
 ## Author: Fostercare
-## Version: 1.0
+## Version: 1.1
 FostercareRezTimer.lua
+
