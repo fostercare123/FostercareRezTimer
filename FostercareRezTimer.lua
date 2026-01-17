@@ -1,21 +1,20 @@
 -- =========================================================================
 -- Addon: FostercareRezTimer
 -- Author: Fostercare
--- Version: 1.0
--- Description: Tracks enemy respawn waves in Battlegrounds using a 
---              hybrid sync system (Combat Log + Spirit Healer API).
+-- Version: 1.1
+-- Description: Tracks enemy respawn waves in Battlegrounds
 -- =========================================================================
 
 -- Startup Confirmation
-message("FostercareRezTimer: Loaded! Type /frt show to test.")
+message("FostercareRezTimer: Loaded! Type /frt for commands.")
 
 -- 1. Configuration & Constants
 local Config = {
     Font       = "Fonts\\FRIZQT__.TTF",
     FontSize   = 18,
-    TitleColor = "|cffffffff", -- White
-    TimerColor = "|cffff0000", -- Red
-    WarnColor  = "|cffffff00", -- Yellow (< 5s remaining)
+    TitleColor = "|cffFFFFFF", -- White (Labels)
+    TimerColor = "|cffFFFFFF", -- White (Numbers)
+    WarnColor  = "|cffEE0000", -- Red (< 5s remaining)
 }
 
 local deadEnemies = {}   -- Stores timestamps of enemy deaths
@@ -24,7 +23,6 @@ local lastUpdate  = 0    -- Throttle for OnUpdate script
 -- 2. UI Frame Initialization
 local f = CreateFrame("Frame", "FostercareRezFrame", UIParent)
 
--- Note: SetSize() is not available in Vanilla (1.12). Using Width/Height.
 f:SetWidth(150)
 f:SetHeight(50)
 f:SetPoint("CENTER", 0, 0)
@@ -133,7 +131,7 @@ f:SetScript("OnEvent", function()
     end
 end)
 
--- 6. Slash Commands (/frt)
+-- 6. Commands (/frt)
 SLASH_FOSTERCAREREZ1 = "/frt"
 SlashCmdList["FOSTERCAREREZ"] = function(msg)
     InitDB()
@@ -147,10 +145,14 @@ SlashCmdList["FOSTERCAREREZ"] = function(msg)
         
     elseif msg == "show" then
         f:Show()
-        DEFAULT_CHAT_FRAME:AddMessage("|cffBF3EFFFostercare:|r Debug Show Mode (Active)")
+        DEFAULT_CHAT_FRAME:AddMessage("|cffBF3EFFFostercare:|r Frame Shown")
+        
+    elseif msg == "hide" then
+        f:Hide()
+        DEFAULT_CHAT_FRAME:AddMessage("|cffBF3EFFFostercare:|r Frame Hidden")
         
     else
-        DEFAULT_CHAT_FRAME:AddMessage("|cffBF3EFFFostercare:|r Commands: /frt lock | /frt show")
+        DEFAULT_CHAT_FRAME:AddMessage("|cffBF3EFFFostercare:|r Commands: /frt lock | /frt show | /frt hide")
     end
 end
 
@@ -165,7 +167,7 @@ f:SetScript("OnUpdate", function()
 
     -- Sync Method B: API Detection (While Dead)
     -- GetAreaSpiritHealerTime() returns the exact server timer when the player is dead.
-    -- We use this to calibrate the loop with 100% accuracy.
+    -- I use this to calibrate the loop with 100% accuracy.
     local realSpiritTime = GetAreaSpiritHealerTime()
     if realSpiritTime > 0 then
         FostercareRezDB.nextRez = now + realSpiritTime
